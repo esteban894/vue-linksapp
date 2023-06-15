@@ -10,7 +10,12 @@ const router = createRouter({
             component: LinkListView,
         },
         {
-            path: "/link/",
+            path: "/links/",
+            name: "links",
+            component: () => import("../views/LinkView.vue"),
+        },
+        {
+            path: "/links/:id",
             name: "link",
             component: () => import("../views/LinkView.vue"),
         },

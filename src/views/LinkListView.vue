@@ -1,19 +1,21 @@
 <script setup>
-import { getData } from "../composables/getData";
+import { useGetData } from "../composables/getData.js";
+import ListItem from "../components/ListItem.vue";
 
-const { data, error } = getData("http://localhost:8000/api/links/");
+const { data, getData, loading, error } = useGetData();
+
+getData("api/links");
 </script>
 <template>
-    <div class="notes">
-        <div class="notes-header">
-            <h2 class="notes-title">&#9782; Notes</h2>
-            <p class="notes-count"></p>
-        </div>
-        <div class="notes-list">
-            <p>Info aqui:{{ data }}</p>
-            <p>Error aquí:{{ error }}</p>
-        </div>
-    </div>
+    <section class="notes">
+        <section class="notes-header">
+            <h2 class="notes-title">&#9782; Links</h2>
+            <p class="notes-count">{{ data?.length }}</p>
+        </section>
+        <section class="notes-list">
+            <ListItem v-for="link in data" :link="link" />
+        </section>
+    </section>
 </template>
 
 <style scoped></style>
