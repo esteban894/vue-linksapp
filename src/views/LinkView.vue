@@ -11,11 +11,11 @@ getData(`/api/links/${route.params.id}`);
 
 <template>
     <section class="note">
-        <section class="note-header">
+        <section class="notes-header">
             <RouterLink to="/">
                 <SvgComp name="arrow-left" />
             </RouterLink>
-            <div class="note-title">
+            <div class="notes-title">
                 <h3>
                     <a :href="data?.link" target="_blank">{{ data?.title }}</a>
                 </h3>
@@ -52,7 +52,7 @@ getData(`/api/links/${route.params.id}`);
     background-color: #a8bbbf;
 }
 
-.note-title {
+.notes-title {
     width: 100%;
     display: flex;
     justify-content: center;

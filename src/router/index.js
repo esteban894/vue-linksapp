@@ -19,6 +19,11 @@ const router = createRouter({
             name: "link",
             component: () => import("../views/LinkView.vue"),
         },
+        {
+            path: "/links/create",
+            name: "create",
+            component: () => import("../views/CreateView.vue"),
+        },
     ],
 });
 

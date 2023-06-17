@@ -1,4 +1,5 @@
 <script setup>
+import { stringifyExpression } from "@vue/compiler-core";
 import { defineAsyncComponent } from "vue";
 
 const props = defineProps({
@@ -6,11 +7,15 @@ const props = defineProps({
         type: String,
         required: true,
     },
+    height: {
+        type: String,
+        required: false,
+    },
 });
 
 const icon = defineAsyncComponent(() => import(`../assets/svg/${props.name}.svg`));
 </script>
-<template>
+<template :height="heigth">
     <component :is="icon" class="fill-current" />
 </template>
 
