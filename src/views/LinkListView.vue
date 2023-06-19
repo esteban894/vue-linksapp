@@ -1,8 +1,9 @@
 <script setup>
 import { useGetData } from "../composables/getData.js";
 import ListItem from "../components/ListItem.vue";
-import AddButton from "../components/AddButton.vue";
+import ButtonComp from "../components/ButtonComp.vue";
 import Spinner from "../components/Spinner.vue";
+import { RouterLink } from "vue-router";
 
 const { data, getData, loading, error } = useGetData();
 
@@ -18,9 +19,9 @@ getData("api/links");
         <section class="notes-list" v-else>
             <ListItem v-for="link in data" :link="link" />
         </section>
-        <section>
-            <AddButton />
-        </section>
+        <RouterLink to="/links/create">
+            <ButtonComp icon="plus-icon" />
+        </RouterLink>
     </section>
 </template>
 

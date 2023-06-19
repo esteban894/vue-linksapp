@@ -20,6 +20,11 @@ const router = createRouter({
             component: () => import("../views/LinkView.vue"),
         },
         {
+            path: "/links/:id/update",
+            name: "updateLink",
+            component: () => import("../views/UpdateView.vue"),
+        },
+        {
             path: "/links/create",
             name: "create",
             component: () => import("../views/CreateView.vue"),

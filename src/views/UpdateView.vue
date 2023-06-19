@@ -1,18 +1,31 @@
 <script setup>
-import { RouterLink, useRouter } from "vue-router";
-import { ref } from "vue";
+import { RouterLink, useRouter, useRoute } from "vue-router";
+import { onMounted, ref } from "vue";
 
-import { useSendData } from "../composables/sendData";
+import { useUpdateData } from "../composables/updateData.js";
+import { useGetData } from "../composables/getData";
 import SvgComp from "../components/SvgComp.vue";
 import NotificationComp from "../components/NotificationComp.vue";
+import Spinner from "../components/Spinner.vue";
 
 const title = ref(null);
 const url = ref(null);
 const description = ref(null);
+
 const errorMessage = ref(null);
 
-const { sendData } = useSendData();
+// TODO cambiar a updateData
+const { updateData } = useUpdateData();
 const router = useRouter();
+const route = useRoute();
+
+// TODO hacer fetch de datos
+
+const { data, error, loading, getData } = useGetData();
+
+onMounted(() => {
+    getData(`/api/links/${route.params.id}`);
+});
 
 const validateData = () => {
     if (!validateNotEmpty(title.value, url.value, description.value)) {
@@ -22,19 +35,16 @@ const validateData = () => {
         errorMessage.value = "Verifique que todos los campos del formulario hayan sido completados";
         return;
     }
-
     title.value = title.value.trim();
     url.value = url.value.trim();
     description.value = description.value.trim();
-
     url.value = formatUrl(url.value);
-
     const dataToSend = {
         title: title.value,
         link: url.value,
         description: description.value,
     };
-    sendData("api/links/create/", dataToSend);
+    updateData(`api/links/${route.params.id}/update/`, dataToSend);
     router.push("/");
 };
 
@@ -50,38 +60,36 @@ const formatUrl = (url) => {
 <template>
     <div>
         <header class="notes-header">
-            <RouterLink to="/">
+            <RouterLink :to="`/links/${route.params.id}`">
                 <SvgComp name="arrow-left" />
             </RouterLink>
             <div class="notes-title">
-                <h2>Crear un Link</h2>
+                <h2>Actualizar un Link</h2>
             </div>
         </header>
-        <section class="form-box">
+        <Spinner v-if="loading" />
+        <section class="form-box" v-else>
             <form method="POST" @submit.prevent="validateData">
                 <div class="input-box">
                     <input
                         type="text"
                         name="name"
-                        placeholder="Nombre"
                         autocomplete="off"
+                        :placeholder="data?.title"
                         v-model="title" />
-                    <div class="input-group">
-                        <label for="link">https://</label>
-                        <input
-                            type="text"
-                            id="link"
-                            placeholder="Link"
-                            autocomplete="off"
-                            v-model="url" />
-                    </div>
+                    <input
+                        type="text"
+                        id="link"
+                        autocomplete="off"
+                        :placeholder="data?.link"
+                        v-model="url" />
                     <textarea
                         name="description"
-                        placeholder="Descripción"
                         autocomplete="off"
                         maxlength="200"
+                        :placeholder="data?.description"
                         v-model="description"></textarea>
-                    <button type="submit" class="btn">Agregar</button>
+                    <button type="submit" class="btn">Actualizar</button>
                 </div>
             </form>
         </section>

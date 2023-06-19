@@ -1,16 +1,26 @@
 <script setup>
 import { useGetData } from "../composables/getData.js";
-import { RouterLink, useRoute } from "vue-router";
+import { RouterLink, useRoute, useRouter } from "vue-router";
 import SvgComp from "../components/SvgComp.vue";
+import ButtonComp from "../components/ButtonComp.vue";
+import { useDeleteData } from "../composables/deleteData";
 
 const route = useRoute();
+const router = useRouter();
 
 const { data, getData, loading, error } = useGetData();
 getData(`/api/links/${route.params.id}`);
+
+const { deleteLoading, deleteData } = useDeleteData();
+
+const deleteLink = () => {
+    deleteData(`/api/links/${route.params.id}/delete/`);
+    router.push("/");
+};
 </script>
 
 <template>
-    <section class="note">
+    <div class="note">
         <section class="notes-header">
             <RouterLink to="/">
                 <SvgComp name="arrow-left" />
@@ -24,7 +34,13 @@ getData(`/api/links/${route.params.id}`);
         <section class="content">
             <p>{{ data?.description }}</p>
         </section>
-    </section>
+        <section>
+            <ButtonComp icon="delete-icon" position="left" @click="deleteLink" />
+        </section>
+        <section>
+            <ButtonComp icon="edit-icon" @click="router.push(`/links/${route.params.id}/update`)" />
+        </section>
+    </div>
 </template>
 
 <style scoped>
